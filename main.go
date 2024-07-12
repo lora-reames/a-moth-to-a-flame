@@ -18,8 +18,8 @@ type model struct {
 	obstacles [][]int
 }
 
-func initialModel() model {
-	m := model{
+func initialModel() *model {
+	m := &model{
 		playerX:   0,
 		playerY:   0,
 		score:     0,
@@ -30,7 +30,7 @@ func initialModel() model {
 	return m
 }
 
-func createObstacles(m model) {
+func createObstacles(m *model) {
 	for i := range m.obstacles {
 		// create x, y pairs for each obstacle
 		m.obstacles[i] = make([]int, 2)
@@ -53,12 +53,12 @@ func createObstacles(m model) {
 	}
 }
 
-func (m model) Init() tea.Cmd {
+func (m *model) Init() tea.Cmd {
 	return tea.SetWindowTitle("A Moth to a Flame")
 }
 
 // Update updates the game state based on user input
-func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
@@ -96,12 +96,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m model) goal() bool {
+func (m *model) goal() bool {
 	return m.playerX == 19 && m.playerY == 9
 }
 
 // checkCollision checks if the player has collided with an obstacle
-func (m model) checkCollision() bool {
+func (m *model) checkCollision() bool {
 	for _, obs := range m.obstacles {
 		if m.playerX == obs[0] && m.playerY == obs[1] {
 			return true
@@ -111,7 +111,7 @@ func (m model) checkCollision() bool {
 }
 
 // contains checks if an obstacle is at a given position
-func (m model) contains(obstacle [][]int, x int, y int) bool {
+func (m *model) contains(obstacle [][]int, x int, y int) bool {
 	for i := range m.obstacles {
 		if obstacle[i][0] == x && obstacle[i][1] == y {
 			return true
@@ -121,7 +121,7 @@ func (m model) contains(obstacle [][]int, x int, y int) bool {
 }
 
 // View renders the game state as a string
-func (m model) View() string {
+func (m *model) View() string {
 	var sb strings.Builder
 	sb.WriteString(fmt.Sprintf("Score: %d Deaths: %d", m.score, m.deaths))
 	sb.WriteString("\n")
