@@ -14,7 +14,7 @@ type model struct {
 	playerX int
 	playerY int
 	score int
-    deaths int
+	deaths int
 	obstacles [][]int
 }
 
@@ -23,7 +23,7 @@ func initialModel() model {
 		playerX:   0,
 		playerY:   0,
 		score:     0,
-        deaths: 0,
+		deaths: 0,
 		obstacles: make([][]int, 40),
 	}
 	createObstacles(m)
@@ -32,24 +32,24 @@ func initialModel() model {
 
 func createObstacles(m model) {
 	for i := range m.obstacles {
-        // create x, y pairs for each obstacle
+		// create x, y pairs for each obstacle
 		m.obstacles[i] = make([]int, 2)
-        
-        // x
+		
+		// x
 		m.obstacles[i][0] = rand.Intn(19)
 
-        // set y, dependent on x value
-        // avoid start
-        if (m.obstacles[i][0] == 0) {
-            m.obstacles[i][1] = max(1, rand.Intn(9))
-        // avoid goal
-        } else if (m.obstacles[i][0] == 19) {
-            m.obstacles[i][1] = rand.Intn(8)
-        } else {
-            m.obstacles[i][1] = rand.Intn(9)
-        }
+		// set y, dependent on x value
+		// avoid start
+		if (m.obstacles[i][0] == 0) {
+			m.obstacles[i][1] = max(1, rand.Intn(9))
+		// avoid goal
+		} else if (m.obstacles[i][0] == 19) {
+			m.obstacles[i][1] = rand.Intn(8)
+		} else {
+			m.obstacles[i][1] = rand.Intn(9)
+		}
 
-        // todo: prevent overwriting existing obstacles? overwriting makes their total ~random~
+		// todo: prevent overwriting existing obstacles? overwriting makes their total ~random~
 	}
 }
 
@@ -80,17 +80,17 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if m.checkCollision() {
 		m.playerX = 0
 		m.playerY = 0
-        m.score = 0
-        m.deaths++
-        m.obstacles = make([][]int, 40) // needs dry?
-        createObstacles(m)
+		m.score = 0
+		m.deaths++
+		m.obstacles = make([][]int, 40) // needs dry?
+		createObstacles(m)
 	}
 
 	if m.goal() {
 		m.playerX = 0
 		m.playerY = 0
-        m.obstacles = make([][]int, 40)
-        createObstacles(m)
+		m.obstacles = make([][]int, 40)
+		createObstacles(m)
 		m.score++
 	}
 	return m, nil
